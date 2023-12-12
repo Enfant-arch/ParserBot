@@ -49,4 +49,4 @@ async def show_my_deals(message: types.Message, state: FSMContext):
     async with state.proxy() as data:
         data["input"] = message.text
         if data["method"] == "query":
-             
+            pass

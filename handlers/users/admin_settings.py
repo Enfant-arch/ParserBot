@@ -40,7 +40,7 @@ async def change_contact(message: types.Message, state: FSMContext):
 @dp.message_handler(IsAdmin(), text="🔴 Выключить покупки", state="*")
 async def turn_off_buy(message: types.Message, state: FSMContext):
     await state.finish()
-    update_settingsx(status_buy="False")
+    update_settingsx(status_parse=False)
     await message.answer("<b>🔴 Покупки в боте были выключены.</b>",
                          reply_markup=get_settings_func())
     await send_all_admin(
@@ -52,7 +52,7 @@ async def turn_off_buy(message: types.Message, state: FSMContext):
 @dp.message_handler(IsAdmin(), text="🟢 Включить покупки", state="*")
 async def turn_on_buy(message: types.Message, state: FSMContext):
     await state.finish()
-    update_settingsx(status_buy="True")
+    update_settingsx(satus_parser=True)
     await message.answer("<b>🟢 Покупки в боте были включены.</b>",
                          reply_markup=get_settings_func())
     await send_all_admin(

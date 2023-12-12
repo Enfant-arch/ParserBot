@@ -3,11 +3,10 @@ from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
 # Кнопки при поиске профиля через админ-меню
 open_profile_inl = InlineKeyboardMarkup()
-input_kb = InlineKeyboardButton(text="💵 Пополнить", callback_data="user_input")
+input_kb = InlineKeyboardButton(text="TG Канал", url="https://google.com")
 mybuy_kb = InlineKeyboardButton(text="🎁 Мои покупки", callback_data="my_buy")
 myLicence_kb = InlineKeyboardButton(text="🌩 Мои Лицензии", callback_data="my_licence")
-open_profile_inl.add(input_kb, mybuy_kb)
-open_profile_inl.add(myLicence_kb)
+open_profile_inl.add(input_kb)
 
 
 chages_licence = InlineKeyboardMarkup()
