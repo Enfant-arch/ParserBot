@@ -5,7 +5,7 @@ from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.builtin import CommandStart
 
 from filters import IsWork, IsUser
-from filters.all_filters import IsBuy
+from filters.all_filters import IsParse
 from keyboards.default import check_user_out_func
 from loader import dp, bot
 from states import StorageUsers
@@ -68,9 +68,9 @@ async def send_user_message(message: types.Message, state: FSMContext):
                            "▶ Введите /start")
 
 
-@dp.message_handler(IsBuy(), text="🤖 Парсинг", state="*")
-@dp.message_handler(IsBuy(), state=StorageUsers.here_input_count_buy_item)
-@dp.callback_query_handler(IsBuy(), text_startswith=prohibit_buy, state="*")
+@dp.message_handler(IsParse(), text="🤖 Парсинг", state="*")
+@dp.message_handler(IsParse(), state=StorageUsers.here_input_count_buy_item)
+@dp.callback_query_handler(IsParse(), text_startswith=prohibit_buy, state="*")
 async def send_user_message(message, state: FSMContext):
     if "id" in message:
         await message.answer("🔴 Покупки в боте временно отключены", True)

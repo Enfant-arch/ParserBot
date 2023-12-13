@@ -7,9 +7,9 @@ def get_settings_func():
     get_settings = get_settingsx()
     settings_default = ReplyKeyboardMarkup(resize_keyboard=True)
     if get_settings[3] == True:
-        status_parser = "🔴 Выключить покупки"
+        status_parser = "🔴 Выключить приват парсер"
     else:
-        status_parser = "🟢 Включить покупки"
+        status_parser = "🟢 Включить приват парсер"
     if get_settings[2] == True:
         status_work = "🔴 Отправить на тех. работы"
     else:

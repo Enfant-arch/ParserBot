@@ -1,4 +1,5 @@
-[2023-12-12 22:46:16] User id6094743728 was authorized as MAIN ADMIN
-[2023-12-12 22:46:16] Updating usernames is turn off
-[2023-12-12 22:46:16] Updating activity is turn off
+[2023-12-12 23:15:38] User id6094743728 was authorized as MAIN ADMIN
+[2023-12-12 23:15:38] Updating usernames is turn off
+[2023-12-12 23:15:38] Updating activity is turn off
 ==============================================================================
+[2023-12-12 23:16:26] User id 6094743728 tried sended message to support

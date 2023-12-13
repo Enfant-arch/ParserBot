@@ -147,7 +147,7 @@ def add_userx(user_id, user_login, user_name, balance, all_refill, reg_date):
     with sqlite3.connect(path_to_db) as db:
         db.execute("INSERT INTO storage_users "
                    "(user_id,  user_login, user_name, balance, all_refill, reg_date, payment_address, wait_pay ) "
-                   "VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+                   "VALUES (%s, %s, %s, %s, %s, %s, %s, %s)",
                    [user_id, user_login, user_name, balance, all_refill, reg_date, "", False])
         db.commit()
 

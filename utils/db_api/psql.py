@@ -79,9 +79,9 @@ def get_format_args(sql, parameters: dict):
 # Добавление пользователя
 def add_userx(user_id, user_login, user_name, balance, all_refill, reg_date):
     cursor.execute("INSERT INTO storage_users "
-                "(user_id,  user_login, user_name, balance, all_refill, reg_date ) "
-                "VALUES (%s, %s, %s, %s, %s, %s)",
-                [user_id, user_login, user_name, balance, all_refill, reg_date])
+                "(user_id,  user_login,  user_name, is_prime, balance, all_refill, reg_date ) "
+                "VALUES (%s, %s, %s, %s, %s, %s, %s)",
+                [user_id, user_login, False, user_name, balance, all_refill, reg_date])
     
 
 

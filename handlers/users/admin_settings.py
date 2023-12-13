@@ -37,7 +37,7 @@ async def change_contact(message: types.Message, state: FSMContext):
 
 
 # Выключение покупок
-@dp.message_handler(IsAdmin(), text="🔴 Выключить покупки", state="*")
+@dp.message_handler(IsAdmin(), text="🔴 Выключить приват парсер", state="*")
 async def turn_off_buy(message: types.Message, state: FSMContext):
     await state.finish()
     update_settingsx(status_parse=False)
@@ -49,7 +49,7 @@ async def turn_off_buy(message: types.Message, state: FSMContext):
 
 
 # Включение покупок
-@dp.message_handler(IsAdmin(), text="🟢 Включить покупки", state="*")
+@dp.message_handler(IsAdmin(), text="🟢 Включить приват парсер", state="*")
 async def turn_on_buy(message: types.Message, state: FSMContext):
     await state.finish()
     update_settingsx(satus_parser=True)

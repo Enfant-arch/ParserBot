@@ -12,7 +12,7 @@ class IsPrivate(BoundFilter):
 
 
 # Проверка на возможность покупки товара
-class IsBuy(BoundFilter):
+class IsParse(BoundFilter):
     async def check(self, message: types.Message):
         get_settings = get_settingsx()
         if get_settings[3] == True or int(message.from_user.id) in Admin.admins():
