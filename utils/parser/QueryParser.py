@@ -1,6 +1,7 @@
 import asyncio
 import json
 from playwright.async_api import async_playwright
+from collections import namedtupple
 import random
 from bs4 import BeautifulSoup
 import re
@@ -13,6 +14,7 @@ class Parser():
         
     async def enject_all_data(self):
         try:
+            print("qw")
             async with async_playwright() as p:
                 context_options = await Parser.queryContextBuilder()
                 self.browser = await p.chromium.launch()
@@ -22,14 +24,14 @@ class Parser():
                 url = await Parser.queryUrlBuilder(self.query)
                 print(url)
                 await page.goto(url=url)
-                await asyncio.sleep(0.6)
+                await asyncio.sleep(0.2)
                 await page.screenshot(path="example.png")
                 result = await page.content()
-                with open("result.html", "+a") as file:
+                with open(file="result.html", mode="+a", encoding="utf-8" ) as file:
                     file.writelines(result)
                 return await Parser.handlerResponce(result)
         except Exception as e:
-            return e
+            print(e)
     
     @staticmethod
     async def queryUrlBuilder(q:str) -> str:
@@ -47,18 +49,19 @@ class Parser():
     @staticmethod
     async def handlerResponce(html:str):
         try:
-            doc = BeautifulSoup(html, "html.parser")
-            script_tag = doc.find("script", string=re.compile("window.__APP__"))
-            print(script_tag)
-            script_data = script_tag.string.strip()
-            cfg_data = re.search(r'"cfg":(.+?)}', script_data).group(1)
+            soup = BeautifulSoup(html, "html.parser")
+            links = soup.find_all("a", class_="ddl_product_link")
+
+            for link in links:
+                print(link.text, link["href"])
         except Exception as err:
             print(err)
 
 
 
 async def  main():
-    parser = Parser(method="method", query="Айфон 15")
+    print("w")
+    parser = Parser(method="method", query="Iphone15")
     await parser.enject_all_data()
 
 asyncio.run(main())
