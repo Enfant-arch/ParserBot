@@ -16,6 +16,7 @@ from keyboards.inline.inline_page import *
 from loader import dp, bot
 from states.parsing_state import *
 from utils.other_func import clear_firstname, get_dates
+from utils.parser import QueryParser
 
 
 # Разбив сообщения на несколько, чтобы не прилетало ограничение от ТГ
@@ -49,4 +50,5 @@ async def show_my_deals(message: types.Message, state: FSMContext):
     async with state.proxy() as data:
         data["input"] = message.text
         if data["method"] == "query":
-            pass
+            parser = QueryParser.Parser(method=data["method"], query="Айфон 15")
+            await message.answer(text=await parser.enject_all_data())
