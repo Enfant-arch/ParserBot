@@ -1,20 +1,25 @@
 import asyncio
 import json
 from playwright.async_api import async_playwright
-from collections import namedtupple
 import random
 from bs4 import BeautifulSoup
+from datetime import datetime
+from Good import Good
 import re
+import time
+
+
 
 
 class Parser():
     def __init__(self, method:str, query:str) -> None:
         self.method = method
         self.query = query
+        self.htmlResponce = None
+        self._products = Good()
         
     async def enject_all_data(self):
         try:
-            print("qw")
             async with async_playwright() as p:
                 context_options = await Parser.queryContextBuilder()
                 self.browser = await p.chromium.launch()
@@ -25,11 +30,17 @@ class Parser():
                 print(url)
                 await page.goto(url=url)
                 await asyncio.sleep(0.2)
+                await page.keyboard.down("End")
+                await asyncio.sleep(0.2)
                 await page.screenshot(path="example.png")
                 result = await page.content()
+                self.htmlResponce = result
                 with open(file="result.html", mode="+a", encoding="utf-8" ) as file:
                     file.writelines(result)
+                await self.context.close()
+                await self.browser.close()
                 return await Parser.handlerResponce(result)
+
         except Exception as e:
             print(e)
     
@@ -43,6 +54,7 @@ class Parser():
         return {
                     "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.150 Safari/537.36",
                     "is_mobile": True,
+                    "viewport" : {'width':868, 'height':693},
                     "java_script_enabled": True
             }
 
@@ -50,18 +62,31 @@ class Parser():
     async def handlerResponce(html:str):
         try:
             soup = BeautifulSoup(html, "html.parser")
-            links = soup.find_all("a", class_="ddl_product_link")
-
+            links = soup.find_all("div", class_="catalog-item-mobile ddl_product")
+            price = soup.find_all("div", class_="item-price")
+            cachback  =  soup.find_all("div", class_="money-bonus sm money-bonus_loyalty")
+            good = Good()
+            print(len(price))
+            print(len(links))
+            print(len(cachback))
+            for p in price:
+                #print(p)
+                pass
+            for c in cachback:
+                #print(c)
+                pass
             for link in links:
-                print(link.text, link["href"])
+                print(link)
         except Exception as err:
             print(err)
 
 
 
 async def  main():
-    print("w")
+    start = datetime.now()
     parser = Parser(method="method", query="Iphone15")
     await parser.enject_all_data()
+    end = datetime.now()
+    print((end - start))
 
 asyncio.run(main())
