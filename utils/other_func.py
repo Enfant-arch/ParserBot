@@ -56,9 +56,38 @@ async def send_all_admin(message, markup=None, not_me=0):
 
 # Очистка имени пользователя от тэгов
 def clear_firstname(firstname):
-    if "<" in firstname: firstname = firstname.replace("<", "*")
-    if ">" in firstname: firstname = firstname.replace(">", "*")
+    if "<" in firstname: firstname = firstname.replace("<", "")
+    if ">" in firstname: firstname = firstname.replace(">", "")
     return firstname
+
+def validate_folder_name(string):
+    # Проверяем, что строка не пустая
+    if not string:
+        return False
+    # Проверяем, что строка не содержит запрещенных символов
+    invalid_chars = ['/', '\\', ':', '*', '?', '"', '<', '>', '|']
+    for char in invalid_chars:
+        if char in string:
+            return False
+    # Проверяем, что строка не совпадает с зарезервированными словами
+    reserved_words = ['CON', 'PRN', 'AUX', 'NUL', 'COM1', 'COM2', 'COM3', 'COM4', 'COM5', 'COM6', 'COM7', 'COM8', 'COM9', 'LPT1', 'LPT2', 'LPT3', 'LPT4', 'LPT5', 'LPT6', 'LPT7', 'LPT8', 'LPT9']
+    if string.upper() in reserved_words:
+        return False
+    # Если все проверки пройдены, то строка может быть названием папки
+    return True
+
+def make_folder_name(string):
+    # Если строка уже может быть названием папки, то ничего не меняем
+    if validate_folder_name(string):
+        return string
+    
+    invalid_chars = ['/', '\\', ':', '*', '?', '"', '<', '>', '|']
+    for char in invalid_chars:
+        string = string.replace(char, '_')
+    reserved_words = ['CON', 'PRN', 'AUX', 'NUL', 'COM1', 'COM2', 'COM3', 'COM4', 'COM5', 'COM6', 'COM7', 'COM8', 'COM9', 'LPT1', 'LPT2', 'LPT3', 'LPT4', 'LPT5', 'LPT6', 'LPT7', 'LPT8', 'LPT9']
+    if string.upper() in reserved_words:
+        string = string + '_'
+    return string
 
 
 # Проверка на обновление счётчика 24-х часов при запуске

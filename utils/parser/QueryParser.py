@@ -7,14 +7,16 @@ from bs4 import BeautifulSoup
 import lxml
 from datetime import datetime
 from Good import Good
+from ResultBuilder import ResultBuilder
 import re
 import time
 
-
+base_path = "https://megamarket.ru/"
 
 
 class Parser():
-    def __init__(self, query:str, is_mobile=False) -> None:
+    def __init__(self, query:str, is_mobile=False, page=0) -> None:
+        self.page = page
         self.query = query
         self.htmlResponce = None
         self._products = Good()
@@ -38,8 +40,6 @@ class Parser():
                 await page.keyboard.down("End")
                 await page.screenshot(path="example.png")
                 self.htmlResponce = await page.content()
-                with open("result.html", "a+", encoding="utf-8") as file:
-                    file.writelines(self.htmlResponce)
 
         except TimeoutError as err:
             print(err)
@@ -56,27 +56,32 @@ class Parser():
                     "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.150 Safari/537.36",
                     "is_mobile": False,
                     "viewport" : self.screen,
-                    "java_script_enabled": True
+                    "java_script_enabled": True,
+                    "proxy": ""
+                    
             }
 
     async def handlerResponce(self):
         try:
             soup = BeautifulSoup(self.htmlResponce, "lxml")
             results = soup.find_all("div", class_= self.dll)
+
             for dirtyProductHTML in results:
                 dirtyProduct = BeautifulSoup(str(dirtyProductHTML), "lxml")
                 if self.IsMoblie is False:
                     bonusPercent = dirtyProduct.find("span", class_='bonus-percent')
-                    if (bonusPercent != None) and (int(bonusPercent.get_text().replace("%", "")) >= 5):
-                        bonusPrice  = dirtyProduct.find("span", class_='bonus-amount')
-                        idGood = dirtyProduct['id']
-                        priceGood = dirtyProduct.find("div", class_="item-price").get_text()
-                        nameGood = str(dirtyProduct.find("div", class_="item-title").get_text())
+                    if ((bonusPercent != None) and (int(bonusPercent.get_text().replace("%", "")))):
+                        bonusPercent = bonusPercent.get_text()
+                        bonusPrice  = dirtyProduct.find("span", class_='bonus-amount').get_text().replace("\t","").replace("\n","")
+                        priceGood = dirtyProduct.find("div", class_="item-price").get_text().replace("\t","").replace("\n","")
+                        nameGood = str(dirtyProduct.find("div", class_="item-title").get_text()).replace("\t","").replace("\n","")
                         imageGood = dirtyProduct.find("img", class_="lazy-img")['src']
-                        linkGood = dirtyProduct.find("a", class_="item-image-block ddl_product_link")['href']
-                        reviewGood = dirtyProduct.find("div", class_ = "review-amount").get_text()
-                        self._products.__add__(id=idGood, name=nameGood, link=linkGood, price=priceGood, cachback=bonusPrice, finalPrice=bonusPercent)
-            
+                        linkGood = base_path + dirtyProduct.find("a", class_="item-image-block ddl_product_link")['href']
+                        reviewGood = dirtyProduct.find("div", class_ = "review-amount").get_text().replace("\t","").replace("\n","")
+
+                        print(f"|{nameGood}|||{linkGood}|||{priceGood}|||{bonusPercent}|||{bonusPrice}|||{imageGood}|||{reviewGood}|\n\n\n")
+                        self._products.__add__(name=nameGood, link=linkGood, price=priceGood, bonusAmount=bonusPrice, bonusPercent=bonusPercent)
+
         except Exception as err:
             print(err)
     
@@ -87,6 +92,7 @@ class Parser():
 
     @staticmethod
     async def queryUrlBuilder(q:str) -> str:
+
         return f"https://megamarket.ru/catalog/?q={q}"
     
 
@@ -94,9 +100,7 @@ async def  main():
     start = datetime.now()
     parser = Parser(query="Iphone15")
     await parser.queryContextBuilder()
-    await parser.enject_all_data()
     await parser.handlerResponce()
-    await parser.show_result()
 
     end = datetime.now()
     print((end - start))

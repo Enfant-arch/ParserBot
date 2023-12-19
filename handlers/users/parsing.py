@@ -1,4 +1,5 @@
 # - *- coding: utf- 8 - *-
+import datetime
 from aiogram import types
 from aiogram.dispatcher import FSMContext
 from data.config import curency, change_hwid_price
@@ -17,6 +18,7 @@ from loader import dp, bot
 from states.parsing_state import *
 from utils.other_func import clear_firstname, get_dates
 from utils.parser import QueryParser
+from utils.parser import ResultBuilder
 
 
 # Разбив сообщения на несколько, чтобы не прилетало ограничение от ТГ
@@ -50,5 +52,12 @@ async def show_my_deals(message: types.Message, state: FSMContext):
     async with state.proxy() as data:
         data["input"] = message.text
         if data["method"] == "query":
-            parser = QueryParser.Parser(method=data["method"], query="Айфон 15")
-            await message.answer(text=await parser.enject_all_data())
+            start_time = datetime.datetime.now()
+            PARSER_PROCCES = QueryParser.Parser(query=message)
+            await PARSER_PROCCES.queryContextBuilder()
+            await PARSER_PROCCES.enject_all_data()
+            await PARSER_PROCCES.handlerResponce()
+            ResultBuilder.ResultBuilder(goods_list=PARSER_PROCCES._products._products, username=clear_firstname(message.from_user.full_name))
+            result_time = datetime.datetime.now() - start_time
+            print(result_time)
+
