@@ -6,9 +6,10 @@ import random
 from bs4 import BeautifulSoup
 import lxml
 from datetime import datetime
-from Good import Good
-from ResultBuilder import ResultBuilder
+from utils.parser.Good import Good
+from utils.parser.ResultBuilder import ResultBuilder
 import re
+
 import time
 
 base_path = "https://megamarket.ru/"
@@ -33,6 +34,7 @@ class Parser():
         try:
             async with async_playwright() as p:
                 self.browser = await p.chromium.launch()
+                
                 self.context_parsing = await self.browser.new_context(**self.context)
                 page = await self.context_parsing.new_page()
                 url = await Parser.queryUrlBuilder(self.query)
@@ -56,9 +58,7 @@ class Parser():
                     "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.150 Safari/537.36",
                     "is_mobile": False,
                     "viewport" : self.screen,
-                    "java_script_enabled": True,
-                    "proxy": ""
-                    
+                    "java_script_enabled": True
             }
 
     async def handlerResponce(self):
@@ -79,7 +79,7 @@ class Parser():
                         linkGood = base_path + dirtyProduct.find("a", class_="item-image-block ddl_product_link")['href']
                         reviewGood = dirtyProduct.find("div", class_ = "review-amount").get_text().replace("\t","").replace("\n","")
 
-                        print(f"|{nameGood}|||{linkGood}|||{priceGood}|||{bonusPercent}|||{bonusPrice}|||{imageGood}|||{reviewGood}|\n\n\n")
+                        (f"|{nameGood}|||{linkGood}|||{priceGood}|||{bonusPercent}|||{bonusPrice}|||{imageGood}|||{reviewGood}|\n\n\n")
                         self._products.__add__(name=nameGood, link=linkGood, price=priceGood, bonusAmount=bonusPrice, bonusPercent=bonusPercent)
 
         except Exception as err:
@@ -90,19 +90,11 @@ class Parser():
         for product in self._products:
             print(product)
 
-    @staticmethod
-    async def queryUrlBuilder(q:str) -> str:
+    async def queryUrlBuilder(self) -> str: 
+        if self.page > 0:
+            return f"{base_path}catalog/page-{self.page}/?q={self.query}"
+        elif self.page == 0:
+            return f"{base_path}catalog/?q={self.query}"
 
-        return f"https://megamarket.ru/catalog/?q={q}"
-    
 
-async def  main():
-    start = datetime.now()
-    parser = Parser(query="Iphone15")
-    await parser.queryContextBuilder()
-    await parser.handlerResponce()
-
-    end = datetime.now()
-    print((end - start))
-
-asyncio.run(main())
+#asyncio.run(main())

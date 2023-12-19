@@ -16,7 +16,7 @@ from keyboards.inline.parsing import select_parsing_Inline
 from keyboards.inline.inline_page import *
 from loader import dp, bot
 from states.parsing_state import *
-from utils.other_func import clear_firstname, get_dates
+from utils.other_func import make_folder_name, get_dates
 from utils.parser import QueryParser
 from utils.parser import ResultBuilder
 
@@ -53,11 +53,12 @@ async def show_my_deals(message: types.Message, state: FSMContext):
         data["input"] = message.text
         if data["method"] == "query":
             start_time = datetime.datetime.now()
-            PARSER_PROCCES = QueryParser.Parser(query=message)
+            PARSER_PROCCES = QueryParser.Parser(query=message.text)
             await PARSER_PROCCES.queryContextBuilder()
+            await PARSER_PROCCES.queryUrlBuilder()
             await PARSER_PROCCES.enject_all_data()
             await PARSER_PROCCES.handlerResponce()
-            ResultBuilder.ResultBuilder(goods_list=PARSER_PROCCES._products._products, username=clear_firstname(message.from_user.full_name))
+            ResultBuilder.ResultBuilder(goods_list=PARSER_PROCCES._products._products, username=make_folder_name(message.from_user.full_name), query=message.text)
             result_time = datetime.datetime.now() - start_time
             print(result_time)
-
+        await message.answer(result_time)

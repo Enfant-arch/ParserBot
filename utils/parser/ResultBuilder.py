@@ -1,8 +1,8 @@
-from Good import product
+from utils.parser.Good import product
 import os
 import pathlib
 import json
-from Good import product
+from utils.parser.Good import product
 import csv
 import openpyxl
 
