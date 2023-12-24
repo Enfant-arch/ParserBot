@@ -2,6 +2,5 @@
 *.pyo
 *.log
 
-*.ini
 /Senv
 */__pycache__
