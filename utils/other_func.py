@@ -71,14 +71,9 @@ def validate_folder_name(string):
     return True
 
 def make_folder_name(string):
-    if validate_folder_name(string):
-        return string 
-    invalid_chars = ['/', '\\', ':', '*', '?', '"', '<', '>', '|']
+    invalid_chars = ['/', '\\', ':', '*', '?', '"', '<', '>', '|', " "]
     for char in invalid_chars:
-        string = string.replace(char, '_')
-    reserved_words = ['CON', 'PRN', 'AUX', 'NUL', 'COM1', 'COM2', 'COM3', 'COM4', 'COM5', 'COM6', 'COM7', 'COM8', 'COM9', 'LPT1', 'LPT2', 'LPT3', 'LPT4', 'LPT5', 'LPT6', 'LPT7', 'LPT8', 'LPT9']
-    if string.upper() in reserved_words:
-        string = string + '_'
+        string = string.replace(char, '-')
     return string
 
 

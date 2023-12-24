@@ -39,6 +39,7 @@ async def bot_start(message: types.Message, state: FSMContext):
     first_name = clear_firstname(message.from_user.first_name)
     get_user_id = get_userx(user_id=message.from_user.id)
     if get_user_id is None:
+        await message.answer(text="Добро пожаловать в парсер бот по Мегамаркету", reply_markup=await check_user_out_func(message.from_user.id))
         if message.from_user.username is not None:
             get_user_login = get_userx(user_login=message.from_user.username)
             if get_user_login is None:
@@ -54,9 +55,10 @@ async def bot_start(message: types.Message, state: FSMContext):
         if message.from_user.username is not None:
             if message.from_user.username.lower() != get_user_id[2]:
                 update_userx(get_user_id[1], user_login=message.from_user.username.lower())
-
-    
-    await bot.send_sticker(chat_id=message.from_user.id, sticker=r"CAACAgIAAxkBAAEK8Ehldb3DRiGrHhLoTyIgTFrruKQMdgACCEIAAirHmErye5nvt3dE_TME", reply_markup = await check_user_out_func(message.from_user.id))
+        try:
+            await bot.delete_message(chat_id=message.from_user.id, message_id=message.message.message_id)    
+        except:pass
+        await bot.send_message(text="Бот работает стабильно", chat_id=message.from_user.id, reply_markup=await check_user_out_func(message.from_user.id))
 
 
 @dp.message_handler(IsUser(), state="*")
