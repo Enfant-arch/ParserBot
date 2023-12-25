@@ -75,40 +75,15 @@ async def general_functions(message: types.Message, state: FSMContext):
 def get_about_bot():
     show_profit_all, show_profit_day, show_refill, show_buy_day, show_money_in_bot, show = 0, 0, 0, 0, 0, 0
     get_settings = get_settingsx()
-    all_purchases = get_all_purchasesx()
     all_users = get_all_usersx()
-    all_refill = get_all_refillx()
-    show_users = get_all_usersx()
-    show_categories = get_all_categoriesx()
-    show_positions = get_all_positionsx()
-    show_items = get_all_itemsx()
-    for purchase in all_purchases:
-        show_profit_all += int(purchase[6])
-        if int(get_settings[4]) - int(purchase[14]) < 86400:
-            show_profit_day += int(purchase[6])
-    for user in all_users:
-        show_money_in_bot += int(user[4])
-    for refill in all_refill:
-        show_refill += int(refill[5])
-        if int(get_settings[5]) - int(refill[9]) < 86400:
-            show_buy_day += int(refill[5])
+    show_users = get_all_usersxPREMIUM()
     message = "<b>📰 ВСЯ ИНФОРАМЦИЯ О БОТЕ</b>\n" \
               f"➖➖➖➖➖➖➖➖➖➖➖➖➖\n" \
               f"<b>🔶 Пользователи: 🔶</b>\n" \
-              f"👤 Пользователей: <code>{len(show_users)}</code>\n" \
-              f"➖➖➖➖➖➖➖➖➖➖➖➖➖\n" \
-              f"<b>🔶 Средства 🔶</b>\n" \
-              f"2️⃣4️⃣🛒 Продаж за 24 часа на: <code>{show_profit_day}руб</code>\n" \
-              f"💰 Продано товаров на: <code>{show_profit_all}руб</code>\n" \
-              f"2️⃣4️⃣💸 Пополнений за 24 часа: <code>{show_buy_day}руб</code>\n" \
-              f"💳 Средств в системе: <code>{show_money_in_bot}руб</code>\n" \
-              f"💸 Пополнено: <code>{show_refill}руб</code>\n" \
-              f"➖➖➖➖➖➖➖➖➖➖➖➖➖\n" \
-              f"<b>🔶 Прочее 🔶</b>\n" \
-              f"🧺 Товаров: <code>{len(show_items)}</code>\n" \
-              f"📁 Позиций: <code>{len(show_positions)}</code>\n" \
-              f"📜 Категорий: <code>{len(show_categories)}</code>\n" \
-              f"🛒 Продано товаров: <code>{len(all_purchases)}</code>\n"
+              f"ℹ️ FAQ : {get_settings[1]}\n"\
+              f"👤 Пользователей: <code>{len(all_users)}</code>\n" \
+              f"👑👤 PREMIUM Пользователей: <code>{len(show_users)}</code>\n" \
+              f"➖➖➖➖➖➖➖➖➖➖➖➖➖\n" 
     return message
 
 

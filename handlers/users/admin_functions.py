@@ -10,7 +10,7 @@ from keyboards.default import get_functions_func, check_user_out_func
 from keyboards.inline import *
 from loader import dp, bot
 from states import StorageFunctions
-from utils.db_api.psql  import get_purchasex, get_refillx, update_userx, last_purchasesx, get_all_usersx
+from utils.db_api.psql  import get_purchasex, update_userx, last_purchasesx, get_all_usersx
 
 
 # Разбив сообщения на несколько, чтобы не прилетало ограничение от ТГ
@@ -36,14 +36,6 @@ async def search_profile(message: types.Message, state: FSMContext):
     await StorageFunctions.here_search_profile.set()
 
 
-# Обработка кнопки "Поиск чеков"
-@dp.message_handler(IsAdmin(), text="📃 Поиск чеков 🔍", state="*")
-async def search_receipt(message: types.Message, state: FSMContext):
-    await state.finish()
-    await message.answer("<b>📃 Отправьте номер чека. Пример:</b>\n"
-                         "▶ +123456789\n"
-                         "▶ #F123456789")
-    await StorageFunctions.here_search_receipt.set()
 
 
 # Принятие текста для рассылки
@@ -103,7 +95,7 @@ async def input_data_for_search_profile(message: types.Message, state: FSMContex
         get_user_data = get_user_data[1:]
         get_user_id = get_userx(user_login=get_user_data.lower())
     if get_user_id is not None:
-        await message.answer(search_user_profile(get_user_id[1]), reply_markup=search_profile_func(get_user_id[1]))
+        await message.answer(search_user_profile(get_user_id[0]), reply_markup=search_profile_func(get_user_id[0]))
         await state.finish()
     else:
         await message.answer("<b>❌ Профиль не был найден</b>\n"
@@ -148,12 +140,13 @@ async def change_user_sale(call: CallbackQuery, state: FSMContext):
 
 
 # Выдача баланса пользователю
-@dp.callback_query_handler(IsAdmin(), text_startswith="add_balance", state="*")
+@dp.callback_query_handler(IsAdmin(), text_startswith="add_status", state="*")
 async def add_balance_user(call: CallbackQuery, state: FSMContext):
     async with state.proxy() as data:
         data["here_cache_user_id"] = call.data.split(":")[1]
+        user = get_userx(user_id = data["here_cache_user_id"])
     await call.message.delete()
-    await call.message.answer("<b>💴 Введите сумму для выдачи баланса</b>")
+    await call.message.answer(f"<b>💴 Вы выдаете премиум статус пользователю {user[2]}</b>")
     await StorageFunctions.here_add_balance.set()
 
 
@@ -247,62 +240,3 @@ async def input_send_user_message(message: types.Message, state: FSMContext):
     await message.answer(search_user_profile(user_id), reply_markup=search_profile_func(user_id))
     await state.finish()
 
-
-# Принятие чека для поиска
-@dp.message_handler(IsAdmin(), state=StorageFunctions.here_search_receipt)
-async def input_search_receipt(message: types.Message, state: FSMContext):
-    receipt = message.text[1:]
-    if message.text.startswith("+"):
-        get_input = get_refillx("*", receipt=receipt)
-        if get_input is not None:
-            await state.finish()
-            if get_input[7] == "Form":
-                way_input = "🥝 Способ пополнения: <code>По форме</code>"
-            elif get_input[7] == "Nickname":
-                way_input = "🥝 Способ пополнения: <code>По никнейму</code>"
-            elif get_input[7] == "Number":
-                way_input = "🥝 Способ пополнения: <code>По номеру</code>"
-            await message.answer(f"<b>📃 Чек:</b> <code>+{get_input[6]}</code>\n"
-                                 "➖➖➖➖➖➖➖➖➖➖➖➖➖\n"
-                                 f"👤 Пользователь: <a href='tg://user?id={get_input[1]}'>{get_input[3]}</a> <code>({get_input[1]})</code>\n"
-                                 f"💵 Сумма: <code>{get_input[5]}руб</code>\n"
-                                 f"{way_input}\n"
-                                 f"🏷 Комментарий: <code>{get_input[4]}</code>\n"
-                                 f"🕜 Дата пополнения: <code>{get_input[8]}</code>",
-                                 reply_markup=get_functions_func(message.from_user.id))
-        else:
-            await message.answer("<b>❌ Чек не был найден.</b>\n"
-                                 "📃 Введите чек / номер покупки. Пример:\n"
-                                 "▶ +123456789123\n"
-                                 "▶ #123456789123")
-            await StorageFunctions.here_search_receipt.set()
-    elif message.text.startswith("#"):
-        get_purchase = get_purchasex("*", receipt=receipt)
-        if get_purchase is not None:
-            await state.finish()
-            buy_items = "<b>📍 Купленные товары:</b>\n" + get_purchase[10]
-            await message.answer(f"<b>📃 Чек:</b> <code>#{get_purchase[4]}</code>\n"
-                                 f"➖➖➖➖➖➖➖➖➖➖➖➖➖\n"
-                                 f"🏷 Название товара: <code>{get_purchase[9]}</code>\n"
-                                 f"📦 Куплено товаров: <code>{get_purchase[5]}шт</code>\n"
-                                 f"💸 Цена 1-го товара: <code>{get_purchase[7]}руб</code>\n"
-                                 f"💵 Сумма покупки: <code>{get_purchase[6]}руб</code>\n"
-                                 f"👤 Купил товар: <a href='tg://user?id={get_purchase[1]}'>{get_purchase[3]}</a> <code>({get_purchase[1]})</code>\n"
-                                 f"🔻 Баланс до покупки: <code>{get_purchase[11]}руб</code>\n"
-                                 f"🔺 Баланс после покупки: <code>{get_purchase[12]}руб</code>\n"
-                                 f"🕜 Дата покупки: <code>{get_purchase[13]}</code>\n"
-                                 f"➖➖➖➖➖➖➖➖➖➖➖➖➖\n"
-                                 f"{buy_items}",
-                                 reply_markup=get_functions_func(message.from_user.id))
-        else:
-            await message.answer("<b>❌ Чек не был найден.</b>\n"
-                                 "📃 Введите чек / номер покупки. Пример:\n"
-                                 "▶ +123456789123\n"
-                                 "▶ #123456789123")
-            await StorageFunctions.here_search_receipt.set()
-    else:
-        await message.answer("<b>❌ Данные были введены неверно.</b>\n"
-                             "📃 Введите чек / номер покупки. Пример:\n"
-                             "▶ +123456789123\n"
-                             "▶ #123456789123")
-        await StorageFunctions.here_search_receipt.set()

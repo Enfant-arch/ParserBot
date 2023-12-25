@@ -3,7 +3,7 @@
 from aiogram import types
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.builtin import CommandStart
-
+from admin_panel.panel.core import core
 from filters import IsWork, IsUser
 from filters.all_filters import IsParse
 from keyboards.default import check_user_out_func
@@ -50,10 +50,10 @@ async def bot_start(message: types.Message, state: FSMContext):
         else:
             add_userx(message.from_user.id, message.from_user.username, first_name, 0, 0, get_dates())
     else:
-        if first_name != get_user_id[3]:
-            update_userx(get_user_id[1], user_name=first_name)
+        if first_name != get_user_id[2]:
+            update_userx(get_user_id[0], user_login=first_name)
         if message.from_user.username is not None:
-            if message.from_user.username.lower() != get_user_id[2]:
+            if message.from_user.username.lower() != get_user_id[1]:
                 update_userx(get_user_id[1], user_login=message.from_user.username.lower())
         try:
             await bot.delete_message(chat_id=message.from_user.id, message_id=message.message.message_id)    

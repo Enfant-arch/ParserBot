@@ -64,12 +64,7 @@ async def show_my_deals(message: types.Message, state: FSMContext):
     await state.finish()
     get_settings = get_settingsx()
     send_msg = get_settings[1]
-    if "{username}" in send_msg:
-        send_msg = send_msg.replace("{username}", f"<b>{message.from_user.username}</b>")
-    if "{user_id}" in send_msg:
-        send_msg = send_msg.replace("{user_id}", f"<b>{message.from_user.id}</b>")
-    if "{firstname}" in send_msg:
-        send_msg = send_msg.replace("{firstname}", f"<b>{clear_firstname(message.from_user.first_name)}</b>")
+    core.logger.make_log(send_msg)
     fqboard = InlineKeyboardMarkup(row_width=1).add(InlineKeyboardButton(text="Читать", url=send_msg))
     await message.answer("FAQ", disable_web_page_preview=False, reply_markup=fqboard)
 

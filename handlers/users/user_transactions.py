@@ -14,7 +14,6 @@ from loader import dp, bot
 from admin_panel.filters import IsMember
 from states.state_payment import StorageQiwi
 from utils import send_all_admin, clear_firstname, get_dates
-from utils.db_api.psql  import update_userx, get_refillx, add_refillx
 from data.config import api_zelenka, id_zelenka, login_zelenka
 from data.config import crystal_secret, crystal_salt, login_crystal
 from utils.payment import lolzapi

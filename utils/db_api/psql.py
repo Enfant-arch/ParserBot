@@ -79,7 +79,7 @@ def get_format_args(sql, parameters: dict):
 # Добавление пользователя
 def add_userx(user_id, user_login, user_name, balance, all_refill, reg_date):
     cursor.execute("INSERT INTO storage_users "
-                "(user_id,  user_login,  user_name, is_prime, balance, all_refill, reg_date ) "
+                "(user_id, user_login, user_name, is_prime, balance, all_refill, reg_date ) "
                 "VALUES (%s, %s, %s, %s, %s, %s, %s)",
                 [user_id, user_login, user_name, False, balance, all_refill, reg_date])
     
@@ -120,11 +120,12 @@ def get_usersx(**kwargs):
 
 # Получение всех пользователей
 def get_all_usersx():
-    get_response = cursor.execute("SELECT * FROM storage_users")
-    get_response = get_response.fetchall()
-    return get_response
+    cursor.execute("SELECT * FROM storage_users")
+    return cursor.fetchall()
 
-
+def get_all_usersxPREMIUM():
+    cursor.execute("SELECT * FROM storage_users WHERE is_prime = TRUE;")
+    return cursor.fetchall()
 # Получение платежных систем
 def get_paymentx():
     get_response = cursor.execute("SELECT * FROM storage_payment")
@@ -185,115 +186,9 @@ def update_settingsx(**kwargs):
 
 
 
-def add_refillx(user_id, user_login, user_name, comment, amount, receipt, way_pay, dates, dates_unix):
-    cursor.execute("INSERT INTO storage_refill "
-                "(user_id, user_login, user_name, comment, amount, receipt, way_pay, dates, dates_unix) "
-                "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)",
-                [user_id, user_login, user_name, comment, amount, receipt, way_pay, dates, dates_unix])
-    
-
-
-# Получение пополнения
-def get_refillx(what_select, **kwargs):
-    sql = f"SELECT {what_select} FROM storage_refill WHERE "
-    sql, parameters = get_format_args(sql, kwargs)
-    cursor.execute(sql, parameters)
-    return cursor.fetchone()
-
-
-
-def get_refillsx(what_select, **kwargs):
-    sql = f"SELECT {what_select} FROM storage_refill WHERE "
-    sql, parameters = get_format_args(sql, kwargs)
-    cursor.execute(sql, parameters)
-    return cursor.fetchall()
-
 
 # Получение всех пополнений
-def get_all_refillx():
-    sql = "SELECT * FROM storage_refill"
-    get_response = cursor.execute(sql)
-    get_response = get_response.fetchall()
-    return get_response
 
-
-# Добавление категории в БД
-def add_categoryx(category_id, category_name):
-    cursor.execute("INSERT INTO storage_category "
-                "(category_id, category_name) "
-                "VALUES (%s, %s)",
-                [category_id, category_name])
-    
-
-
-# Изменение категории
-def update_categoryx(category_id, **kwargs):
-    
-        sql = f"UPDATE storage_category SET XXX WHERE category_id = {category_id}"
-        sql, parameters = update_format_with_args(sql, kwargs)
-        cursor.execute(sql, parameters)
-        
-
-
-# Получение категории
-def get_categoryx(what_select, **kwargs):
-    sql = f"SELECT {what_select} FROM storage_category WHERE "
-    sql, parameters = get_format_args(sql, kwargs)
-    cursor.execute(sql, parameters)
-    return cursor.fetchone()
-
-
-# Получение категорий
-def get_categoriesx(what_select, **kwargs):
-    sql = f"SELECT {what_select} FROM storage_category WHERE "
-    sql, parameters = get_format_args(sql, kwargs)
-    cursor.execute(sql, parameters)
-    return cursor.fetchall()
-
-
-# Получение всех категорий
-def get_all_categoriesx():
-    sql = "SELECT * FROM storage_category"
-    get_response = cursor.execute(sql)
-    get_response = get_response.fetchall()
-    return get_response
-
-
-# Очистка категорий
-def clear_categoryx():
-    
-        sql = "DELETE FROM storage_category"
-        cursor.execute(sql)
-        
-
-
-# Удаление товаров
-def remove_categoryx(**kwargs):
-    
-        sql = "DELETE FROM storage_category WHERE "
-        sql, parameters = get_format_args(sql, kwargs)
-        cursor.execute(sql, parameters)
-        
-
-
-# Добавление категории в БД
-def add_positionx(position_id, position_name, position_type, position_price,  position_price_day,  position_price_week, position_price_month, position_discription, position_image, position_date,
-                  category_id, base_path, path_change):
-    
-        logging.info("work")
-        if position_type == 2:
-            cursor.execute("INSERT INTO storage_position "
-                   "(position_id, position_name, position_type, position_price, position_price_day, position_price_week, position_price_mounth,  position_discription, position_image, position_date, category_id, base_path, path_change) "
-                   "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
-                   [position_id, position_name, position_type, position_price, position_price_day, position_price_week,  position_price_month,  position_discription, position_image,
-                    position_date, category_id, base_path, path_change])
-        else:
-            cursor.execute("INSERT INTO storage_position "
-                   "(position_id, position_name, position_type, position_price, position_discription, position_image, position_date, category_id) "
-                   "VALUES (%s, %s, %s, %s, %s, %s, %s)",
-                   [position_id, position_name, position_type, position_price, position_discription, position_image,
-                    position_date, category_id])
-        
 
 
 # Изменение позиции
@@ -598,7 +493,6 @@ def last_purchasesx(user_id):
 def create_bdx():
             try:
                 cursor.execute("CREATE TABLE IF NOT EXISTS storage_users("
-                        "increment SERIAL PRIMARY KEY, "
                         "user_id BIGINT, user_login TEXT, user_name TEXT, is_prime BOOL, "
                         "balance DECIMAL, all_refill INTEGER, reg_date TIMESTAMP)")
                 logging.info("(1/2) | Creating USER TABLE...")
@@ -610,7 +504,7 @@ def create_bdx():
                 now_unix = int(time.time())
 
                 cursor.execute("INSERT INTO storage_settings(" \
-                    "contact, faq, status, status_parser, profit_buy, profit_refill) " \
+                    "contact, faq, status, status_parser,  profit_buy, profit_refill) " \
                     "VALUES (%s, %s, %s, %s, %s, %s)", ["ℹ Контакты. Измените их в настройках бота.\n"
                             "➖➖➖➖➖➖➖➖➖➖➖➖➖\n"
                             f"{bot_description}",

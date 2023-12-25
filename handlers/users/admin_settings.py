@@ -39,13 +39,13 @@ async def change_contact(message: types.Message, state: FSMContext):
 # Выключение покупок
 @dp.message_handler(IsAdmin(), text="🔴 Выключить приват парсер", state="*")
 async def turn_off_buy(message: types.Message, state: FSMContext):
-    await state.finish()
+    await state.finish()        
     update_settingsx(status_parse=False)
-    await message.answer("<b>🔴 Покупки в боте были выключены.</b>",
+    await message.answer("<b>🔴 Парсер был выключен.</b>",
                          reply_markup=get_settings_func())
     await send_all_admin(
         f"👤 Администратор <a href='tg://user?id={message.from_user.id}'>{clear_firstname(message.from_user.first_name)}</a>\n"
-        "🔴 Выключил покупки в боте.", not_me=message.from_user.id)
+        "🔴 Выключил парсер в боте.", not_me=message.from_user.id)
 
 
 # Включение покупок

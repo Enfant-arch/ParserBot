@@ -23,4 +23,4 @@ async def processing_missed_callback(call: CallbackQuery, state: FSMContext):
         pass
     await call.message.answer("<b>❌ Данные не были найдены из-за перезапуска скрипта.\n"
                               "♻ Выполните действие заново.</b>",
-                              reply_markup=check_user_out_func(call.from_user.id))
+                              reply_markup=await check_user_out_func(call.from_user.id))

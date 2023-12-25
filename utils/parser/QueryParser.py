@@ -42,7 +42,6 @@ class Parser():
                 core.logger.make_log(self.url)
                 await page.goto(url=self.url)
                 await asyncio.sleep(2)
-                await page.screenshot(path="screenshot.png")
                 await page.keyboard.down("End")
 
                 self.url = await Parser.queryUrlProccesing(page.url, self.page, self.query)
@@ -57,8 +56,6 @@ class Parser():
         await self.context_parsing.close()
         await self.browser.close()
     
-    
-
     
 
     async def handlerResponce(self):

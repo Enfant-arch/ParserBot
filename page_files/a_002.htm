@@ -1,0 +1,88 @@
+<html lang="ru"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8"><script>window.widget = {};window.widget.setValue = function() {
+            return window.parent.flocktory.wapi(window.frameElement, 'setValue', arguments);
+          };
+window.widget.getValue = function() {
+            return window.parent.flocktory.wapi(window.frameElement, 'getValue', arguments);
+          };
+window.widget.getData = function() {
+            return window.parent.flocktory.wapi(window.frameElement, 'getData', arguments);
+          };
+window.widget.getMeta = function() {
+            return window.parent.flocktory.wapi(window.frameElement, 'getMeta', arguments);
+          };
+window.widget.track = function() {
+            return window.parent.flocktory.wapi(window.frameElement, 'track', arguments);
+          };
+window.widget.setScreen = function() {
+            return window.parent.flocktory.wapi(window.frameElement, 'setScreen', arguments);
+          };
+window.widget.pushStatus = function() {
+            return window.parent.flocktory.wapi(window.frameElement, 'pushStatus', arguments);
+          };
+window.widget.pushSubscribe = function() {
+            return window.parent.flocktory.wapi(window.frameElement, 'pushSubscribe', arguments);
+          };
+window.widget.getMotivation = function() {
+            return window.parent.flocktory.wapi(window.frameElement, 'getMotivation', arguments);
+          };
+window.widget.sendError = function() {
+            return window.parent.flocktory.wapi(window.frameElement, 'sendError', arguments);
+          };
+window.widget.collectEmail = function() {
+            return window.parent.flocktory.wapi(window.frameElement, 'collectEmail', arguments);
+          };
+window.widget.hide = function() {
+            return window.parent.flocktory.wapi(window.frameElement, 'hide', arguments);
+          };
+window.widget.show = function() {
+            return window.parent.flocktory.wapi(window.frameElement, 'show', arguments);
+          };
+window.widget.ready = function() {
+            return window.parent.flocktory.wapi(window.frameElement, 'ready', arguments);
+          };
+window.widget.configure = function() {
+            return window.parent.flocktory.wapi(window.frameElement, 'configure', arguments);
+          };Object.freeze(window.widget);</script>
+
+  <title>WC-9901</title>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<script>
+  const EMAIL_REGEX = /^[-a-z0-9!#$%&'*+/=?^_`{|}~]+(?:\.[-a-z0-9!#$%&'*+/=?^_`{|}~]+)*@(?:[a-z0-9]([-a-z0-9]{0,61}[a-z0-9])?\.)+([a-z]{2,18})$/;
+  const containerElement = parent.document.querySelector('#app > div:first-child');
+  const targetElements = Array.from(parent.document.querySelectorAll('.components_unavailableProductSubscriptionButton__button_0'));
+  const addSubscriptionListener = () => {
+    const modalElement = parent.document.querySelector('.c-modal-container-unavailable-product-subscription');
+    const emailField = modalElement.querySelector('.c-form-group__input');
+    const submitButton = modalElement.querySelector('.modals_unavailable-product-subscription__button_0');
+    const collectEmail = () => {
+      if (EMAIL_REGEX.test(emailField.value)) {
+        widget.collectEmail(emailField.value, null, null);
+        observer.disconnect();
+      }
+    };
+
+    emailField.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        collectEmail();
+      }
+    });
+    submitButton.addEventListener('click', collectEmail);
+  };
+  const observer = new MutationObserver(addSubscriptionListener);
+
+  if (targetElements.length) {
+    targetElements.forEach((element) => {
+      element.addEventListener('click', () => {
+        observer.observe(containerElement, {childList: true});
+      });
+    });
+  }
+</script>
+
+
+</body></html>

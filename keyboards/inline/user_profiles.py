@@ -7,7 +7,7 @@ def get_user_profile(user_id):
     count_items = 0
     msg = f"<b>👤 Ваш профиль:</b>\n" \
           f"➖➖➖➖➖➖➖➖➖➖➖➖➖\n" \
-          f"🔑 Мой ID: <code>{get_user[1]}</code>\n" \
+          f"🔑 Мой ID: <code>{get_user[0]}</code>\n" \
           f"📇 Логин: <b>@{get_user[2]}</b>\n" \
           f"📅 Регистрация: <code>{get_user[6]}</code>\n" \
           f"➖➖➖➖➖➖➖➖➖➖➖➖➖\n" 

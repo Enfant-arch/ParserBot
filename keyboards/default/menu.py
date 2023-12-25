@@ -8,9 +8,9 @@ async def check_user_out_func(user_id):
     menu_default = ReplyKeyboardMarkup(resize_keyboard=True)
     menu_default.row("🤖 Парсинг")
     menu_default.row("👤 Профиль")
-    menu_default.add(KeyboardButton(text="ℹ FAQ")   )
+    menu_default.add(KeyboardButton(text="ℹ FAQ"))
     if int(user_id) in Admin.admins():
-        menu_default.row("🎁 Управление товарами 🖍", "📰 Информация о боте")
+        menu_default.row("📰 Информация о боте")
         menu_default.row("⚙ Настройки", "🔆 Общие функции")
     return menu_default
 
