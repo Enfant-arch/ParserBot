@@ -7,6 +7,10 @@ import random
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
 
+Main_catalog = InlineKeyboardMarkup(row_width=2)
+
+
+
 
 pattern0 = r"window\.__APP__=(\{.*?\});"
 pattern = r'"currentDepartmentCategories"\s*:\s*(\[(?:[^\[\]]|\[(?:[^\[\]]|\[[^\[\]]*\])*\])*\])'

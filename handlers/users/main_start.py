@@ -23,7 +23,6 @@ prohibit_buy = ["xbuy_item", "not_buy_items", "buy_this_item", "buy_open_positio
 @dp.callback_query_handler(IsWork(), state="*")
 async def send_work_message(message: types.Message, state: FSMContext):
     x = IsWork()
-    print(await x.check(message=message))
     if "id" in message:
         await message.answer("🔴 Бот находится на технических работах.")
     else:

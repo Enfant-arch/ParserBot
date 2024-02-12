@@ -131,8 +131,8 @@ class ResultBuilder():
     def generate_message(data:list):
         result = f"✅ Найдено: {len(data)} товаров\n"
         for x in range(len(data)):
-            result += f"{data[x].name} : кешбек - {data[x].bonusAmount}\n"
-            if x > 5:
+            result += f'<a href="{data[x].link}">{data[x].name}</a> : кешбек/цена - {data[x].bonusAmount}/{data[x].price}₽\n'
+            if x > 20:
                 break
         result += "<code>и так далее</code>"
         return result

@@ -1,4 +1,7 @@
-[2023-12-25 12:07:44] User id6094743728 was authorized as MAIN ADMIN
-[2023-12-25 12:07:44] Updating usernames is turn off
-[2023-12-25 12:07:44] Updating activity is turn off
+[2024-02-12 23:07:48] User id6094743728 was authorized as MAIN ADMIN
+[2024-02-12 23:07:48] Updating usernames is turn off
+[2024-02-12 23:07:48] Updating activity is turn off
 ==============================================================================
+[2024-02-12 23:08:55] ℹ Информация. Измените её в настройках бота.
+➖➖➖➖➖➖➖➖➖➖➖➖➖
+"Парсер-бот мегамаркета"

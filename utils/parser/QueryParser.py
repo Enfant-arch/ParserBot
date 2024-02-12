@@ -18,9 +18,10 @@ base_path = "https://megamarket.ru/"
 
 
 class Parser():
-    def __init__(self, query:str, is_mobile=False, page=0) -> None:
+    def __init__(self, query:str, catalog=False, is_mobile=False, page=0) -> None:
         self.page = page
-        self.query = query.replace("-", "%20")
+        self.query = query
+        self.catalog = catalog
         self.htmlResponce = None
         self._products = Good()
         self.context = None
@@ -39,12 +40,17 @@ class Parser():
                 self.browser = await p.chromium.launch()
                 self.context_parsing = await self.browser.new_context(**self.context)
                 page = await self.context_parsing.new_page()
+                if self.catalog: 
+                    self.url = base_path + "catalog/" + self.query
+                    self.url = Parser.queryUrlCatalogBuilder(self.url, self.page)
+                else:
+                    self.query.replace("-", "%20")
+                    self.url = await Parser.queryUrlProccesing(page.url, self.page, self.query)
                 core.logger.make_log(self.url)
                 await page.goto(url=self.url)
                 await asyncio.sleep(2)
                 await page.keyboard.down("End")
 
-                self.url = await Parser.queryUrlProccesing(page.url, self.page, self.query)
                 self.htmlResponce = await page.content()
 
         except TimeoutError as err:
@@ -100,6 +106,12 @@ class Parser():
             return f"{base_path}catalog/page-{page}/?q={query}/"
         elif page == 0:
             return f"{base_path}catalog/?q={query}"
+    @staticmethod
+    def queryUrlCatalogBuilder(url, page) -> str: 
+        if page > 0:
+            return f"{url}/page-{page}/"
+        elif page == 0:
+            return f"{url}"
         
     @staticmethod
     async def queryUrlProccesing(url, page, query) -> str: 
