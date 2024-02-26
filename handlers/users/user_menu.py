@@ -10,7 +10,7 @@ import asyncio
 import re
 from aiogram.types import CallbackQuery
 from middlewares.throttling import rate_limit
-from keyboards.default import check_user_out_func, all_back_to_main_default
+from keyboards.default import generate_keyboard, all_back_to_main_default
 from keyboards.inline import *
 from keyboards.inline.parsing import parsing_InlineBoard
 from keyboards.inline.inline_page import *
@@ -26,7 +26,7 @@ def split_messages(get_list, count):
 
 @dp.callback_query_handler(lambda x: x.data == "parser:back", state="*")
 @rate_limit(2)
-@dp.message_handler(text="🤖 Парсинг", state="*")
+@dp.callback_query_handler(lambda x: x.data == "parsing", state="*")
 async def show_search(message: types.CallbackQuery, state: FSMContext):
     await state.finish()
     try:
@@ -37,7 +37,6 @@ async def show_search(message: types.CallbackQuery, state: FSMContext):
             photo="https://berikod.ru/storage/images/blog/5084d11bbc53b92cd741629a97603fc1_700x350.png", 
             caption="Найдите нужные вам товары с хорошим кешбеком\n<b>👇 Выберите вариант :</b>", reply_markup=parsing_InlineBoard)
     except:
-        await bot.send_sticker(chat_id=message.from_user.id, sticker="CAACAgIAAxkBAAELBoJlhykJ0zhIXzUOHr1GJR-yJpBBiwACTgIAAladvQow_mttgTIDbzME", reply_markup=ReplyKeyboardRemove())
         await bot.send_photo( chat_id=message.from_user.id,
             photo="https://berikod.ru/storage/images/blog/5084d11bbc53b92cd741629a97603fc1_700x350.png", 
             caption="Найдите нужные вам товары с хорошим кешбеком\n<b>👇 Выберите вариант :</b>", reply_markup=parsing_InlineBoard)

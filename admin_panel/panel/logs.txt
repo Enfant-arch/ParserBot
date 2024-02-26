@@ -1,7 +1,10 @@
-[2024-02-12 23:07:48] User id6094743728 was authorized as MAIN ADMIN
-[2024-02-12 23:07:48] Updating usernames is turn off
-[2024-02-12 23:07:48] Updating activity is turn off
+[2024-02-26 17:20:51] User id6094743728 was authorized as MAIN ADMIN
+[2024-02-26 17:20:51] Updating usernames is turn off
+[2024-02-26 17:20:51] Updating activity is turn off
 ==============================================================================
-[2024-02-12 23:08:55] ℹ Информация. Измените её в настройках бота.
-➖➖➖➖➖➖➖➖➖➖➖➖➖
-"Парсер-бот мегамаркета"
+[2024-02-26 17:21:05] https://megamarket.ru/catalog/?q=iphone-15
+[2024-02-26 17:21:36] Timeout 30000ms exceeded.
+[2024-02-26 17:21:36] object of type 'NoneType' has no len()
+[2024-02-26 17:21:40] https://megamarket.ru/catalog/page-1/?q=iphone-15/
+[2024-02-26 17:22:06] 'NoneType' object has no attribute 'get_text'
+[2024-02-26 17:22:10] https://megamarket.ru/catalog/page-2/?q=iphone-15/

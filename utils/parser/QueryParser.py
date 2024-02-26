@@ -8,8 +8,9 @@ import lxml
 from datetime import datetime
 from utils.parser.Good import Good
 from admin_panel.panel.core import core
-from utils.parser.ResultBuilder import ResultBuilder
+from utils.misc.anouncement import dll_in_market_changed
 import re
+from loader import dp, bot
 
 import time
 
@@ -22,13 +23,13 @@ class Parser():
         self.page = page
         self.query = query
         self.catalog = catalog
-        self.htmlResponce = None
+        self.htmlResponce = None    
         self._products = Good()
         self.context = None
         self.IsMoblie = is_mobile
         self.url =  Parser.queryUrlBuilder(self.page, self.query)
         if self.IsMoblie is False:
-            self.dll = "catalog-item catalog-item-desktop ddl_product"
+            self.dll = "catalog-item ddl_product catalog-item-desktop"
             self.screen = {'width':random.randint(1201,1208), 'height':738}
         else:
             self.screen = {'width':random.randint(1090,1099), 'height':738}
@@ -37,22 +38,21 @@ class Parser():
     async def enject_all_data(self):
         try:
             async with async_playwright() as p:
-                self.browser = await p.chromium.launch()
+                self.browser = await p.chromium.launch(headless=False)
                 self.context_parsing = await self.browser.new_context(**self.context)
                 page = await self.context_parsing.new_page()
                 if self.catalog: 
-                    self.url = base_path + "catalog/" + self.query
-                    self.url = Parser.queryUrlCatalogBuilder(self.url, self.page)
+                    url = base_path + "catalog/" + self.query
+                    self.url = Parser.queryUrlCatalogBuilder(url, self.page)
                 else:
                     self.query.replace("-", "%20")
                     self.url = await Parser.queryUrlProccesing(page.url, self.page, self.query)
                 core.logger.make_log(self.url)
                 await page.goto(url=self.url)
-                await asyncio.sleep(2)
+                await asyncio.sleep(3)
                 await page.keyboard.down("End")
-
                 self.htmlResponce = await page.content()
-
+            
         except TimeoutError as err:
             core.logger.make_log(err)
             return TimeoutError
@@ -69,6 +69,9 @@ class Parser():
             
             soup = BeautifulSoup(self.htmlResponce, "lxml")
             results = soup.find_all("div", class_= self.dll)
+            if len(results) == 0:
+                dll_in_market_changed()
+                return
             for dirtyProductHTML in results:
                 dirtyProduct = BeautifulSoup(str(dirtyProductHTML), "lxml")
                 if self.IsMoblie is False:

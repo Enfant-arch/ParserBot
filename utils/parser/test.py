@@ -15,7 +15,7 @@ from collections import namedtuple
 catalog_entity = namedtuple("Position", ["id", "title", "titleImage", "nodes",
                 "sequence","subTitle", "category", "collection", "parentId"])
 
-f = open(file=r"E:\work\ParserMegaMarket\ParserMegaMarket\ParserBot\page.html", mode="r+", encoding='utf-8')
+f = open(file=r"C:\Users\frigm\Desktop\Mega\ParserBot\page.html", mode="r+", encoding='utf-8')
 
 catalog_list = list()
 Main_catalog = InlineKeyboardMarkup(row_width=2)
@@ -34,12 +34,9 @@ async def test_enject():
 
 async def test_kbB():
     data = await test_enject()
-    #callbackdata = "item:id:parentid"
     datas =  eval(data)
     for item in datas:
         catalog_list.append(item)
-        if str(item["parentId"]) == "0":
-            Main_catalog.add(InlineKeyboardButton(text=item["title"], callback_data=f"catalog_item:{item['id']}"))
-
+        if str(item["parentId"]) == "0":Main_catalog.add(InlineKeyboardButton(text=item["title"], callback_data=f"catalog_item:{item['id']}"))
     
     

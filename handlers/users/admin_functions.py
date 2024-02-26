@@ -6,7 +6,7 @@ from aiogram.dispatcher import FSMContext
 from aiogram.types import CallbackQuery
 
 from admin_panel.filters import IsAdmin
-from keyboards.default import get_functions_func, check_user_out_func
+from keyboards.default import get_functions_func, generate_keyboard
 from keyboards.inline import *
 from loader import dp, bot
 from states import StorageFunctions
@@ -163,7 +163,7 @@ async def input_add_balance(message: types.Message, state: FSMContext):
             await message.answer("<b>✅ Пользователю</b> "
                                  f"<a href='tg://user?id={get_user[1]}'>{get_user[3]}</a> "
                                  f"<b>было выдано</b> <code>{get_amount}руб</code>",
-                                reply_markup= await check_user_out_func(message.from_user.id))
+                                reply_markup= await generate_keyboard(message.from_user.id))
             await bot.send_message(user_id, f"<b>💳 Вам было выдано</b> <code>{get_amount}руб</code>")
             await message.answer(search_user_profile(user_id), reply_markup=search_profile_func(user_id))
             await state.finish()
@@ -200,7 +200,7 @@ async def input_set_balance(message: types.Message, state: FSMContext):
             await message.answer("<b>✅ Пользователю</b> "
                                  f"<a href='tg://user?id={get_user[1]}'>{get_user[3]}</a> "
                                  f"<b>был изменён баланс на</b> <code>{get_amount}руб</code>",
-                                reply_markup= await check_user_out_func(message.from_user.id))
+                                reply_markup= await generate_keyboard(message.from_user.id))
             await message.answer(search_user_profile(user_id), reply_markup=search_profile_func(user_id))
             await state.finish()
         else:
@@ -236,7 +236,7 @@ async def input_send_user_message(message: types.Message, state: FSMContext):
                          f"<a href='tg://user?id={get_user[1]}'>{get_user[3]}</a> "
                          f"<b>было отправлено сообщение:</b>\n"
                          f"{get_message}",
-                        reply_markup= await check_user_out_func(message.from_user.id))
+                        reply_markup= await generate_keyboard(message.from_user.id))
     await message.answer(search_user_profile(user_id), reply_markup=search_profile_func(user_id))
     await state.finish()
 

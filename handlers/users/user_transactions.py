@@ -8,7 +8,7 @@ from aiogram import types
 from aiogram.dispatcher import FSMContext
 from aiogram.types import CallbackQuery
 
-from keyboards.default import all_back_to_main_default, check_user_out_func, payment_serviece, crypto_service
+from keyboards.default import all_back_to_main_default, generate_keyboard, payment_serviece, crypto_service
 from keyboards.inline import *
 from loader import dp, bot
 from admin_panel.filters import IsMember

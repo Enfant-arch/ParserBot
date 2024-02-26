@@ -120,7 +120,7 @@ from collections import namedtuple
 catalog_entity = namedtuple("Position", ["id", "title", "titleImage", "nodes",
                 "sequence","subTitle", "category", "collection", "parentId"])
 
-f = open(file=r"E:\work\ParserMegaMarket\ParserMegaMarket\ParserBot\page.html", mode="r+", encoding='utf-8')
+f = open(file=r"C:\Users\frigm\Desktop\Mega\ParserBot\page.html", mode="r+", encoding='utf-8')
 
 catalog_list = list()
 Main_catalog = InlineKeyboardMarkup(row_width=2)

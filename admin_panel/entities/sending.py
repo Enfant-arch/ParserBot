@@ -52,3 +52,4 @@ class Sending:
         with open(_path, "w", encoding = "utf-8") as f:
             f.write(str(table))
         return InputFile(_path)
+    

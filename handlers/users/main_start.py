@@ -6,7 +6,7 @@ from aiogram.dispatcher.filters.builtin import CommandStart
 from admin_panel.panel.core import core
 from filters import IsWork, IsUser
 from filters.all_filters import IsParse
-from keyboards.default import check_user_out_func
+from keyboards.default import generate_keyboard
 from loader import dp, bot
 from states import StorageUsers
 from utils.db_api.psql  import *
@@ -38,7 +38,7 @@ async def bot_start(message: types.Message, state: FSMContext):
     first_name = clear_firstname(message.from_user.first_name)
     get_user_id = get_userx(user_id=message.from_user.id)
     if get_user_id is None:
-        await message.answer(text="Добро пожаловать в парсер бот по Мегамаркету", reply_markup=await check_user_out_func(message.from_user.id))
+        await message.answer(text="Добро пожаловать в парсер бот по Мегамаркету", reply_markup=await generate_keyboard(message.from_user.id))
         if message.from_user.username is not None:
             get_user_login = get_userx(user_login=message.from_user.username)
             if get_user_login is None:
@@ -57,7 +57,7 @@ async def bot_start(message: types.Message, state: FSMContext):
         try:
             await bot.delete_message(chat_id=message.from_user.id, message_id=message.message.message_id)    
         except:pass
-        await bot.send_message(text="Бот работает стабильно", chat_id=message.from_user.id, reply_markup=await check_user_out_func(message.from_user.id))
+        await bot.send_message(text="Бот работает стабильно", chat_id=message.from_user.id, reply_markup=await generate_keyboard(message.from_user.id))
 
 
 @dp.message_handler(IsUser(), state="*")
@@ -69,11 +69,11 @@ async def send_user_message(message: types.Message, state: FSMContext):
                            "▶ Введите /start")
 
 
-@dp.message_handler(IsParse(), text="🤖 Парсинг", state="*")
+@dp.callback_query_handler(IsParse(), text="parsing", state="*")
 @dp.message_handler(IsParse(), state=StorageUsers.here_input_count_buy_item)
 @dp.callback_query_handler(IsParse(), text_startswith=prohibit_buy, state="*")
 async def send_user_message(message, state: FSMContext):
     if "id" in message:
-        await message.answer("🔴 Покупки в боте временно отключены", True)
+        await message.answer("🔴 Парсинг в боте временно отключен", True)
     else:
-        await message.answer("<b>🔴 Покупки в боте временно отключены</b>")
+        await message.answer("<b>🔴 Парсинг в боте временно отключен</b>")

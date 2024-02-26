@@ -4,7 +4,7 @@ from aiogram.dispatcher import FSMContext
 from aiogram.types import CallbackQuery
 from aiogram.utils.exceptions import MessageCantBeDeleted
 
-from keyboards.default import check_user_out_func
+from keyboards.default import generate_keyboard
 from loader import dp
 
 
@@ -23,4 +23,4 @@ async def processing_missed_callback(call: CallbackQuery, state: FSMContext):
         pass
     await call.message.answer("<b>❌ Данные не были найдены из-за перезапуска скрипта.\n"
                               "♻ Выполните действие заново.</b>",
-                              reply_markup=await check_user_out_func(call.from_user.id))
+                              reply_markup=await generate_keyboard(call.from_user.id))

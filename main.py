@@ -10,7 +10,7 @@ from utils.other_func import on_startup_notify, update_last_profit, check_update
 from utils.parser.test import test_kbB
 from utils.set_bot_commands import set_default_commands
 
-file_log = logging.FileHandler('WotShop.log', "a")
+file_log = logging.FileHandler('MegaMarket.log', "a")
 console_out = logging.StreamHandler()
 
 

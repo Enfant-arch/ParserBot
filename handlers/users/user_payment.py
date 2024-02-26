@@ -16,7 +16,7 @@ from aiogram.types import ParseMode
 import logging
 from aiogram.types import animation
 from aiogram.dispatcher.filters import Text
-from keyboards.default import check_user_out_func
+from keyboards.default import generate_keyboard
 from middlewares.throttling import rate_limit
 from utils.payment.currency_payment import CurrencyPayment
 from utils.payment.env import MinPay, PROJECT_NAME, curr

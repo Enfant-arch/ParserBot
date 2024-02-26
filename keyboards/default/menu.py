@@ -3,16 +3,22 @@ from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardMar
 from admin_panel.entities.admin import Admin
 
 
-async def check_user_out_func(user_id):
- 
-    menu_default = ReplyKeyboardMarkup(resize_keyboard=True)
-    menu_default.row("🤖 Парсинг")
-    menu_default.row("👤 Профиль")
-    menu_default.add(KeyboardButton(text="ℹ FAQ"))
+async def generate_keyboard(user_id) -> InlineKeyboardMarkup:
     if int(user_id) in Admin.admins():
-        menu_default.row("📰 Информация о боте")
-        menu_default.row("⚙ Настройки", "🔆 Общие функции")
-    return menu_default
+        menu_default = InlineKeyboardMarkup(inline_keyboard=[
+            [InlineKeyboardButton(text="📰 Информация о боте", callback_data="bot:info")],
+            [InlineKeyboardButton(text="⚙ Настройки", callback_data="bot:settings")],
+            [InlineKeyboardButton(text="🔆 Общие функции", callback_data="bot:utils")],
+        ])
+        return menu_default
+    else:
+        menu_default = InlineKeyboardMarkup(inline_keyboard=[
+            [InlineKeyboardButton(text="🤖 Парсинг", callback_data="parsing")],
+            [InlineKeyboardButton(text="👤 Профиль", callback_data="profile")],
+            [InlineKeyboardButton(text="📬 Авторассылка", callback_data="mega-broadcast")],
+        ])
+        return menu_default
+
 
 def payment_serviece():
     payment_services = InlineKeyboardMarkup(resize_keyboard=True)

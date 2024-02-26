@@ -3,7 +3,6 @@ import datetime
 from aiogram import types
 from aiogram.dispatcher import FSMContext
 from emoji import emojize
-from data.config import curency, change_hwid_price
 import aiohttp
 import aiohttp
 from admin_panel.panel.core import core
@@ -11,7 +10,7 @@ import asyncio
 import re
 from aiogram.types import CallbackQuery
 from middlewares.throttling import rate_limit
-from keyboards.default import check_user_out_func, all_back_to_main_default
+from keyboards.default import generate_keyboard
 from keyboards.inline import *
 from keyboards.inline.parsing import select_parsing_Inline
 from keyboards.inline.inline_page import *
@@ -62,7 +61,7 @@ async def show_my_deals(message: types.Message, state: FSMContext):
             start_time = datetime.datetime.now()
             PARSER_PROCCES = QueryParser.Parser(query=query)
             await bot.send_message(chat_id=message.from_user.id, text=emojize("Парсер приступил к работе обычно это занимает порядка одной минуты, ожидайте результат"), disable_notification=True)
-            await bot.send_sticker(chat_id=message.from_user.id, sticker=r"CAACAgIAAxkBAAEK8Ehldb3DRiGrHhLoTyIgTFrruKQMdgACCEIAAirHmErye5nvt3dE_TME", reply_markup = await check_user_out_func(message.from_user.id))
+            await bot.send_sticker(chat_id=message.from_user.id, sticker=r"CAACAgIAAxkBAAEK8Ehldb3DRiGrHhLoTyIgTFrruKQMdgACCEIAAirHmErye5nvt3dE_TME", reply_markup = await generate_keyboard(message.from_user.id))
             await PARSER_PROCCES.queryContextBuilder()
             for i in range(awailble_pages):
                 PARSER_PROCCES.page = i
@@ -71,9 +70,8 @@ async def show_my_deals(message: types.Message, state: FSMContext):
                     await bot.edit_message_text(message_id=message.message.message_id, chat_id=message.from_user.id,
                     text="Произошел сбой во время работы парсера\nПовторите попытку", reply_markup=select_parsing_Inline)
                     if (PARSER_PROCCES.page == 0):i -= 1
-                    else : continue
-            
-                else:                
+                    else:continue
+                else:         
                     await PARSER_PROCCES.handlerResponce()
                 
             rb = ResultBuilder(goods_list=PARSER_PROCCES._products._products, username=make_folder_name(message.from_user.full_name), query=query)
@@ -117,7 +115,7 @@ async def show_my_deals(call: types.CallbackQuery, state: FSMContext):
                 await bot.delete_message(chat_id=call.from_user.id, message_id=call.message.message_id)
                 query_title = make_folder_name(query_title).lower()
                 await bot.send_message(chat_id=call.from_user.id, text=emojize(f"Парсер приступил к работе по запросу : {query_title}\n обычно это занимает порядка одной минуты, ожидайте результат"), disable_notification=True)
-                await bot.send_sticker(chat_id=call.from_user.id, sticker=r"CAACAgIAAxkBAAEK8Ehldb3DRiGrHhLoTyIgTFrruKQMdgACCEIAAirHmErye5nvt3dE_TME", reply_markup = await check_user_out_func(call.from_user.id))
+                await bot.send_sticker(chat_id=call.from_user.id, sticker=r"CAACAgIAAxkBAAEK8Ehldb3DRiGrHhLoTyIgTFrruKQMdgACCEIAAirHmErye5nvt3dE_TME", reply_markup = await generate_keyboard(call.from_user.id))
 
                 start_time = datetime.datetime.now()
 
